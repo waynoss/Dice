@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ruleset name="Modified Zend Standard">
+    <description>Modified Zend Standard</description>
+    <rule ref="Zend">
+        <exclude name="Generic.Files.LineLength" />
+        <exclude name="Zend.NamingConventions.ValidVariableName.NotCamelCaps" />
+    </rule>
+</ruleset>
