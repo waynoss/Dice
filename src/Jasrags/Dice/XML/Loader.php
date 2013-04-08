@@ -2,10 +2,10 @@
 namespace Jasrags\Dice\XML;
 
 /**
- * Class XmlLoader
+ * Class Loader
  * @package Jasrags\Dice\XML
  */
-class XmlLoader
+class Loader
 {
     /**
      * @param string $str
