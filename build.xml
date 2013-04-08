@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Dice" default="build">
+
+    <property file="build.properties"/>
+    <property name="composer" value="composer.phar" />
+    <property name="docdir" value="docs" />
+
+    <patternset id="files">
+        <include name="**/*.php"/>
+        <exclude name="vendor/**"/>
+    </patternset>
+
+    <target name="build" depends="setup,test"
+        description="Setup and test the project" />
+
+    <target name="coverage" description="Display unit test coverage metrics">
+        <exec executable="phpunit" passthru="true">
+            <arg value="--coverage-text" />
+            <arg value="${phpunitFlag}" />
+        </exec>
+    </target>
+
+    <target name="coverage-clover">
+        <exec executable="phpunit" passthru="true">
+            <arg value="--coverage-clover=coverage.xml" />
+        </exec>
+    </target>
+
+    <target name="coverage-html" description="Build HTML code coverage report"
+            depends="require-docdir">
+        <exec executable="phpunit" passthru="true">
+            <arg value="--coverage-html=${docdir}/coverage" />
+            <arg value="${phpunitFlag}" />
+        </exec>
+    </target>
+
+    <target name="document" description="Build API documentation"
+            depends="require-docdir">
+        <mkdir dir="${docdir}/api"/>
+        <exec executable="phpdoc" passthru="true">
+            <arg value="--directory=."/>
+            <arg value="--ignore=vendor/*"/>
+            <arg value="--ignore=src/Crypt/*"/>
+            <arg value="--progressbar"/>
+            <arg value="--target=${docdir}/api"/>
+            <arg value="--title=ICRMS-common-delivery documentation"/>
+        </exec>
+    </target>
+
+    <target name="lint" description="Run PHPLint on project's files">
+        <phplint deprecatedAsError="true" haltonfailure="true">
+            <fileset dir=".">
+                <patternset refid="files"/>
+            </fileset>
+        </phplint>
+    </target>
+
+    <target name="phpcs" description="Run code sniffer on project's files">
+        <phpcodesniffer standard="./coding_rules.xml" format="full"
+                        showWarnings="true">
+            <fileset dir=".">
+                <patternset refid="files"/>
+            </fileset>
+        </phpcodesniffer>
+    </target>
+
+    <target name="phploc"
+            description="Display some statistics about the project">
+        <exec executable="phploc" passthru="true">
+            <arg value="--count-tests"/>
+            <arg value="--exclude"/>
+            <arg value="src/Crypt"/>
+            <arg value="--exclude"/>
+            <arg value="vendor"/>
+            <arg value="."/>
+        </exec>
+    </target>
+
+    <target name="require-docdir">
+        <if>
+            <not>
+                <isset property="docdir"/>
+            </not>
+            <then>
+                <fail message="docdir isn't set in your build.properties file"/>
+            </then>
+        </if>
+    </target>
+
+    <target name="setup" description="Set up the project">
+        <phingcall target="setup-composer" />
+        <phingcall target="update-composer" />
+    </target>
+
+    <target name="setup-composer">
+        <exec executable="${composer}" passthru="true" checkreturn="true">
+            <arg value="install" />
+            <arg value="--dev" />
+        </exec>
+    </target>
+
+    <target name="test" description="Run unit tests">
+        <exec executable="phpunit" passthru="true" checkreturn="true">
+            <arg value="${phpunitFlag}" />
+        </exec>
+    </target>
+
+    <target name="update-composer">
+        <exec executable="${composer}" passthru="true" checkreturn="true">
+            <arg value="update" />
+            <arg value="--dev" />
+        </exec>
+    </target>
+</project>
