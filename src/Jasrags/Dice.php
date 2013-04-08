@@ -155,19 +155,13 @@ class Dice
             }
 
             $paramClassName = $param->getClass() ? strtolower($param->getClass()->name) : false;
-//            var_dump($paramClassName);
-//            var_dump($rule->substitutions);
             if ($paramClassName && isset($rule->substitutions[$paramClassName])) {
-//                var_dump('$paramClassName && isset($rule->substitutions[$paramClassName])');
                 $parameters[] = is_string($rule->substitutions[$paramClassName]) ? new Instance($rule->substitutions[$paramClassName]) : $rule->substitutions[$paramClassName];
             } else if ($paramClassName && class_exists($paramClassName)) {
-//                var_dump('$paramClassName && class_exists($paramClassName)');
                 $parameters[] = $this->create($paramClassName, $share, null, in_array($paramClassName, array_map('strtolower', $rule->newInstances)));
             } else if (is_array($args) && count($args) > 0) {
-//                var_dump('is_array($args) && count($args) > 0');
                 $parameters[] = array_shift($args);
             } else {
-//                var_dump('else');
                 $parameters[] = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : null;
             }
         }
