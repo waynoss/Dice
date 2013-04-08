@@ -60,12 +60,12 @@ class DiceTest extends \PHPUnit_Framework_TestCase
 
         $this->dice->addRule('*', $defaultBehaviour);
 
-        $rule = $this->dice->getRule('A');
+        $rule = $this->dice->getRule('Jasrags\A');
 
         $this->assertTrue($rule->shared);
 
-        $a1 = $this->dice->create('\Jasrags\A');
-        $a2 = $this->dice->create('\Jasrags\A');
+        $a1 = $this->dice->create('Jasrags\A');
+        $a2 = $this->dice->create('Jasrags\A');
 
         $this->assertSame($a1, $a2);
     }
@@ -102,12 +102,12 @@ class DiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testObjectGraphCreation()
     {
-        $a = $this->dice->create('\Jasrags\A');
-        $this->assertInstanceOf('\Jasrags\B', $a->b);
-        $this->assertInstanceOf('\Jasrags\C', $a->b->c);
-        $this->assertInstanceOf('\Jasrags\D', $a->b->c->d);
-        $this->assertInstanceOf('\Jasrags\E', $a->b->c->e);
-        $this->assertInstanceOf('\Jasrags\F', $a->b->c->e->f);
+        $a = $this->dice->create('Jasrags\A');
+        $this->assertInstanceOf('Jasrags\B', $a->b);
+        $this->assertInstanceOf('Jasrags\C', $a->b->c);
+        $this->assertInstanceOf('Jasrags\D', $a->b->c->d);
+        $this->assertInstanceOf('Jasrags\E', $a->b->c->e);
+        $this->assertInstanceOf('Jasrags\F', $a->b->c->e->f);
     }
 
     /**
@@ -117,14 +117,14 @@ class DiceTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new Rule;
         $rule->shared = true;
-        $this->dice->addRule('B', $rule);
+        $this->dice->addRule('Jasrags\B', $rule);
 
         $rule = new Rule;
-        $rule->newInstances[] = 'B';
-        $this->dice->addRule('A', $rule);
+        $rule->newInstances[] = 'Jasrags\B';
+        $this->dice->addRule('Jasrags\A', $rule);
 
-        $a1 = $this->dice->create('\Jasrags\A');
-        $a2 = $this->dice->create('\Jasrags\A');
+        $a1 = $this->dice->create('Jasrags\A');
+        $a2 = $this->dice->create('Jasrags\A');
 
         $this->assertNotSame($a1->b, $a2->b);
     }
@@ -136,12 +136,12 @@ class DiceTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new Rule();
         $rule->shared = true;
-        $rule->instanceOf = '\Jasrags\A';
+        $rule->instanceOf = 'Jasrags\A';
 
-        $this->dice->addRule('[A]', $rule);
+        $this->dice->addRule('[\Jasrags\A]', $rule);
 
-        $a1 = $this->dice->create('[A]');
-        $a2 = $this->dice->create('[A]');
+        $a1 = $this->dice->create('[\Jasrags\A]');
+        $a2 = $this->dice->create('[\Jasrags\A]');
         $this->assertSame($a1, $a2);
     }
 
@@ -152,12 +152,12 @@ class DiceTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new Rule;
         $rule->shared = true;
-        $this->dice->addRule('\Jasrags\A', $rule);
+        $this->dice->addRule('Jasrags\A', $rule);
 
-        $a1 = $this->dice->create('\Jasrags\A');
-        $a2 = $this->dice->create('\Jasrags\A');
+        $a1 = $this->dice->create('Jasrags\A');
+        $a2 = $this->dice->create('Jasrags\A');
 
-        $a3 = $this->dice->create('\Jasrags\A', array(), null, true);
+        $a3 = $this->dice->create('Jasrags\A', array(), null, true);
 
         $this->assertSame($a1, $a2);
         $this->assertNotSame($a1, $a3);
@@ -172,13 +172,13 @@ class DiceTest extends \PHPUnit_Framework_TestCase
         $shared = new Rule();
         $shared->shared = true;
 
-        $this->dice->addRule('\Jasrags\MyObj', $shared);
+        $this->dice->addRule('Jasrags\MyObj', $shared);
 
-        $obj = $this->dice->create('\Jasrags\MyObj');
-        $this->assertInstanceOf('\Jasrags\MyObj', $obj);
+        $obj = $this->dice->create('Jasrags\MyObj');
+        $this->assertInstanceOf('Jasrags\MyObj', $obj);
 
-        $obj2 = $this->dice->create('\Jasrags\MyObj');
-        $this->assertInstanceOf('\Jasrags\MyObj', $obj2);
+        $obj2 = $this->dice->create('Jasrags\MyObj');
+        $this->assertInstanceOf('Jasrags\MyObj', $obj2);
 
         $this->assertSame($obj, $obj2);
 
@@ -191,337 +191,390 @@ class DiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @group grain
      */
     public function testSubstitutionText()
     {
         $rule = new Rule();
-        $rule->substitutions['B'] = new Instance('ExtendedB');
-        $this->dice->addRule('A', $rule);
+        $rule->substitutions['Jasrags\B'] = new Instance('Jasrags\ExtendedB');
+        $this->dice->addRule('Jasrags\A', $rule);
 
-        $a = $this->dice->create('\Jasrags\A');
-var_dump(get_class($a->b));
-        $this->assertInstanceOf('ExtendedB', $a->b);
+        $a = $this->dice->create('Jasrags\A');
+        $this->assertInstanceOf('Jasrags\ExtendedB', $a->b);
     }
 
-//    public function testSubstitutionCallback()
-//    {
-//        $rule = new Rule;
-//        $injection = $this->dice;
-//        $rule->substitutions['B'] = function () use ($injection) {
-//            return $injection->create('ExtendedB');
-//        };
-//
-//        $this->dice->addRule('A', $rule);
-//
-//        $a = $this->dice->create('\Jasrags\A');
-//
-//        $this->assertInstanceOf('ExtendedB', $a->b);
-//    }
-//
-//    public function testSubstitutionObject()
-//    {
-//        $rule = new Rule;
-//
-//        $rule->substitutions['B'] = $this->dice->create('ExtendedB');
-//
-//        $this->dice->addRule('A', $rule);
-//
-//        $a = $this->dice->create('\Jasrags\A');
-//        $this->assertInstanceOf('ExtendedB', $a->b);
-//    }
-//
-//    public function testSubstitutionString()
-//    {
-//        $rule = new Rule;
-//
-//        $rule->substitutions['B'] = new Instance('ExtendedB');
-//
-//        $this->dice->addRule('A', $rule);
-//
-//        $a = $this->dice->create('\Jasrags\A');
-//        $this->assertInstanceOf('ExtendedB', $a->b);
-//    }
-//
-//
-//    public function testConstructParams()
-//    {
-//        $rule = new Rule;
-//        $rule->constructParams = array('foo', 'bar');
-//        $this->dice->addRule('RequiresConstructorArgsA', $rule);
-//
-//        $obj = $this->dice->create('RequiresConstructorArgsA');
-//
-//        $this->assertEquals($obj->foo, 'foo');
-//        $this->assertEquals($obj->bar, 'bar');
-//    }
-//
-//    public function testConstructParamsMixed()
-//    {
-//        $rule = new Rule;
-//        $rule->constructParams = array('foo', 'bar');
-//        $this->dice->addRule('RequiresConstructorArgsB', $rule);
-//
-//        $obj = $this->dice->create('RequiresConstructorArgsB');
-//
-//        $this->assertEquals($obj->foo, 'foo');
-//        $this->assertEquals($obj->bar, 'bar');
-//        $this->assertInstanceOf('A', $obj->a);
-//    }
-//
-//    public function testConstructArgs()
-//    {
-//        $obj = $this->dice->create('RequiresConstructorArgsA', array('foo', 'bar'));
-//        $this->assertEquals($obj->foo, 'foo');
-//        $this->assertEquals($obj->bar, 'bar');
-//    }
-//
-//    public function testConstructArgsMixed()
-//    {
-//        $obj = $this->dice->create('RequiresConstructorArgsB', array('foo', 'bar'));
-//        $this->assertEquals($obj->foo, 'foo');
-//        $this->assertEquals($obj->bar, 'bar');
-//        $this->assertInstanceOf('A', $obj->a);
-//    }
-//
-//    public function testCreateCallback()
-//    {
-//        $result = false;
-//        $callback = function ($params) use (&$result) {
-//            $result = $params;
-//        };
-//
-//        $this->dice->create('A', array(), $callback);
-//
-//        $this->assertTrue(is_array($result));
-//        $this->assertInstanceOf('B', $result[0]);
-//    }
-//
-//    public function testCreateArgs1()
-//    {
-//        $a = $this->dice->create('A', array($this->dice->create('ExtendedB')));
-//        $this->assertInstanceOf('ExtendedB', $a->b);
-//    }
-//
-//
-//    public function testCreateArgs2()
-//    {
-//        $a2 = $this->dice->create('A2', array($this->dice->create('ExtendedB'), 'Foo'));
-//        $this->assertInstanceOf('B', $a2->b);
-//        $this->assertInstanceOf('C', $a2->c);
-//        $this->assertEquals($a2->foo, 'Foo');
-//    }
-//
-//
-//    public function testCreateArgs3()
-//    {
-//        //reverse order args. It should be smart enough to handle this.
-//        $a2 = $this->dice->create('A2', array('Foo', $this->dice->create('ExtendedB')));
-//        $this->assertInstanceOf('B', $a2->b);
-//        $this->assertInstanceOf('C', $a2->c);
-//        $this->assertEquals($a2->foo, 'Foo');
-//    }
-//
-//    public function testCreateArgs4()
-//    {
-//        $a2 = $this->dice->create('A3', array('Foo', $this->dice->create('ExtendedB')));
-//        $this->assertInstanceOf('B', $a2->b);
-//        $this->assertInstanceOf('C', $a2->c);
-//        $this->assertEquals($a2->foo, 'Foo');
-//    }
-//
-//    public function testMultipleSharedInstancesByNameMixed()
-//    {
-//        $rule = new Rule;
-//        $rule->shared = true;
-//        $rule->constructParams[] = 'FirstY';
-//
-//        $this->dice->addRule('Y', $rule);
-//
-//        $rule = new Rule;
-//        $rule->instanceOf = 'Y';
-//        $rule->shared = true;
-//        $rule->constructParams[] = 'SecondY';
-//
-//        $this->dice->addRule('[Y2]', $rule);
-//
-//        $rule = new Rule;
-//        $rule->constructParams = array(new Instance('Y'), new Instance('[Y2]'));
-//
-//        $this->dice->addRule('Z', $rule);
-//
-//        $z = $this->dice->create('Z');
-//        $this->assertEquals($z->y1->name, 'FirstY');
-//        $this->assertEquals($z->y2->name, 'SecondY');
-//
-//    }
-//
-//    public function testNonSharedComponentByNameA()
-//    {
-//        $rule = new Rule;
-//        $rule->instanceOf = 'ExtendedB';
-//        $this->dice->addRule('$B', $rule);
-//
-//        $rule = new Rule;
-//        $rule->constructParams[] = new Instance('$B');
-//        $this->dice->addRule('A', $rule);
-//
-//        $a = $this->dice->create('\Jasrags\A');
-//        $this->assertInstanceOf('ExtendedB', $a->b);
-//    }
-//
-//    public function testNonSharedComponentByName()
-//    {
-//
-//        $rule = new Rule;
-//        $rule->instanceOf = 'Y3';
-//        $rule->constructParams[] = 'test';
-//
-//
-//        $this->dice->addRule('$Y2', $rule);
-//
-//
-//        $y2 = $this->dice->create(new Instance('$Y2'));
-//        //echo $y2->name;
-//        $this->assertInstanceOf('Y3', $y2);
-//
-//        $rule = new Rule;
-//
-//        $rule->constructParams[] = new Instance('$Y2');
-//        $this->dice->addRule('Y1', $rule);
-//
-//        $y1 = $this->dice->create('Y1');
-//        $this->assertInstanceOf('Y3', $y1->y2);
-//    }
-//
+    /**
+     * @test
+     */
+    public function testSubstitutionCallback()
+    {
+        $rule = new Rule;
+        $injection = $this->dice;
+        $rule->substitutions['Jasrags\B'] = function () use ($injection) {
+            return $injection->create('Jasrags\ExtendedB');
+        };
+
+        $this->dice->addRule('Jasrags\A', $rule);
+
+        $a = $this->dice->create('Jasrags\A');
+        $this->assertInstanceOf('Jasrags\ExtendedB', $a->b);
+    }
+
+    /**
+     * @test
+     */
+    public function testSubstitutionObject()
+    {
+        $rule = new Rule;
+
+        $rule->substitutions['Jasrags\B'] = $this->dice->create('Jasrags\ExtendedB');
+
+        $this->dice->addRule('Jasrags\A', $rule);
+
+        $a = $this->dice->create('Jasrags\A');
+        $this->assertInstanceOf('Jasrags\ExtendedB', $a->b);
+    }
+
+    /**
+     * @test
+     */
+    public function testSubstitutionString()
+    {
+        $rule = new Rule;
+
+        $rule->substitutions['Jasrags\B'] = new Instance('Jasrags\ExtendedB');
+
+        $this->dice->addRule('Jasrags\A', $rule);
+
+        $a = $this->dice->create('Jasrags\A');
+        $this->assertInstanceOf('Jasrags\ExtendedB', $a->b);
+    }
+
+    /**
+     * @test
+     */
+    public function testConstructParams()
+    {
+        $rule = new Rule();
+        $rule->constructParams = array('foo', 'bar');
+        $this->dice->addRule('Jasrags\RequiresConstructorArgsA', $rule);
+
+        $obj = $this->dice->create('Jasrags\RequiresConstructorArgsA');
+
+        $this->assertEquals($obj->foo, 'foo');
+        $this->assertEquals($obj->bar, 'bar');
+    }
+
+    /**
+     * @test
+     */
+    public function testConstructParamsMixed()
+    {
+        $rule = new Rule;
+        $rule->constructParams = array('foo', 'bar');
+        $this->dice->addRule('Jasrags\RequiresConstructorArgsB', $rule);
+
+        $obj = $this->dice->create('Jasrags\RequiresConstructorArgsB');
+
+        $this->assertEquals($obj->foo, 'foo');
+        $this->assertEquals($obj->bar, 'bar');
+        $this->assertInstanceOf('Jasrags\A', $obj->a);
+    }
+
+    /**
+     * @test
+     */
+    public function testConstructArgs()
+    {
+        $obj = $this->dice->create('Jasrags\RequiresConstructorArgsA', array('foo', 'bar'));
+        $this->assertEquals($obj->foo, 'foo');
+        $this->assertEquals($obj->bar, 'bar');
+    }
+
+    /**
+     * @test
+     */
+    public function testConstructArgsMixed()
+    {
+        $obj = $this->dice->create('Jasrags\RequiresConstructorArgsB', array('foo', 'bar'));
+        $this->assertEquals($obj->foo, 'foo');
+        $this->assertEquals($obj->bar, 'bar');
+        $this->assertInstanceOf('Jasrags\A', $obj->a);
+    }
+
+    /**
+     * @test
+     */
+    public function testCreateCallback()
+    {
+        $result = false;
+        $callback = function ($params) use (&$result) {
+            $result = $params;
+        };
+
+        $this->dice->create('Jasrags\A', array(), $callback);
+
+        $this->assertTrue(is_array($result));
+        $this->assertInstanceOf('Jasrags\B', $result[0]);
+    }
+
+    /**
+     * @test
+     */
+    public function testCreateArgs1()
+    {
+        $a = $this->dice->create('Jasrags\A', array($this->dice->create('Jasrags\ExtendedB')));
+        $this->assertInstanceOf('Jasrags\ExtendedB', $a->b);
+    }
+
+    /**
+     * @test
+     */
+    public function testCreateArgs2()
+    {
+        $a2 = $this->dice->create('Jasrags\A2', array($this->dice->create('Jasrags\ExtendedB'), 'Foo'));
+        $this->assertInstanceOf('Jasrags\B', $a2->b);
+        $this->assertInstanceOf('Jasrags\C', $a2->c);
+        $this->assertEquals($a2->foo, 'Foo');
+    }
+
+    /**
+     * @test
+     */
+    public function testCreateArgs3()
+    {
+        //reverse order args. It should be smart enough to handle this.
+        $a2 = $this->dice->create('Jasrags\A2', array('Foo', $this->dice->create('Jasrags\ExtendedB')));
+        $this->assertInstanceOf('Jasrags\B', $a2->b);
+        $this->assertInstanceOf('Jasrags\C', $a2->c);
+        $this->assertEquals($a2->foo, 'Foo');
+    }
+
+    /**
+     * @test
+     */
+    public function testCreateArgs4()
+    {
+        $a2 = $this->dice->create('Jasrags\A3', array('Foo', $this->dice->create('Jasrags\ExtendedB')));
+        $this->assertInstanceOf('Jasrags\B', $a2->b);
+        $this->assertInstanceOf('Jasrags\C', $a2->c);
+        $this->assertEquals($a2->foo, 'Foo');
+    }
+
+    /**
+     * @test
+     */
+    public function testMultipleSharedInstancesByNameMixed()
+    {
+        $rule = new Rule;
+        $rule->shared = true;
+        $rule->constructParams[] = 'FirstY';
+
+        $this->dice->addRule('Jasrags\Y', $rule);
+
+        $rule = new Rule;
+        $rule->instanceOf = 'Jasrags\Y';
+        $rule->shared = true;
+        $rule->constructParams[] = 'SecondY';
+
+        $this->dice->addRule('[Y2]', $rule);
+
+        $rule = new Rule;
+        $rule->constructParams = array(new Instance('Jasrags\Y'), new Instance('[Y2]'));
+
+        $this->dice->addRule('Jasrags\Z', $rule);
+
+        $z = $this->dice->create('Jasrags\Z');
+        $this->assertEquals($z->y1->name, 'FirstY');
+        $this->assertEquals($z->y2->name, 'SecondY');
+    }
+
+    /**
+     * @test
+     */
+    public function testNonSharedComponentByNameA()
+    {
+        $rule = new Rule;
+        $rule->instanceOf = 'Jasrags\ExtendedB';
+        $this->dice->addRule('$B', $rule);
+
+        $rule = new Rule;
+        $rule->constructParams[] = new Instance('$B');
+        $this->dice->addRule('Jasrags\A', $rule);
+
+        $a = $this->dice->create('Jasrags\A');
+        $this->assertInstanceOf('Jasrags\ExtendedB', $a->b);
+    }
+
+    /**
+     * @test
+     */
+    public function testNonSharedComponentByName()
+    {
+        $rule = new Rule;
+        $rule->instanceOf = 'Jasrags\Y3';
+        $rule->constructParams[] = 'test';
+
+
+        $this->dice->addRule('$Y2', $rule);
+
+
+        $y2 = $this->dice->create(new Instance('$Y2'));
+
+        $this->assertInstanceOf('Jasrags\Y3', $y2);
+
+        $rule = new Rule;
+
+        $rule->constructParams[] = new Instance('$Y2');
+        $this->dice->addRule('Jasrags\Y1', $rule);
+
+        $y1 = $this->dice->create('Jasrags\Y1');
+        $this->assertInstanceOf('Jasrags\Y3', $y1->y2);
+    }
+
+    /**
+     * @test
+     */
 //    public function testSubstitutionByName()
 //    {
 //        $rule = new Rule;
-//        $rule->instanceOf = 'ExtendedB';
+//        $rule->instanceOf = 'Jasrags\ExtendedB';
 //        $this->dice->addRule('$B', $rule);
 //
 //        $rule = new Rule;
 //        $rule->substitutions['B'] = new Instance('$B');
 //
-//        $this->dice->addRule('A', $rule);
-//        $a = $this->dice->create('\Jasrags\A');
+//        $this->dice->addRule('Jasrags\A', $rule);
+//        $a = $this->dice->create('Jasrags\A');
 //
-//        $this->assertInstanceOf('ExtendedB', $a->b);
+//        $this->assertInstanceOf('Jasrags\ExtendedB', $a->b);
 //    }
-//
-//    public function testMultipleSubstitutions()
-//    {
-//        $rule = new Rule;
-//        $rule->instanceOf = 'Y2';
-//        $rule->constructParams[] = 'first';
-//        $this->dice->addRule('$Y2A', $rule);
-//
-//        $rule = new Rule;
-//        $rule->instanceOf = 'Y2';
-//        $rule->constructParams[] = 'second';
-//        $this->dice->addRule('$Y2B', $rule);
-//
-//        $rule = new Rule;
-//        $rule->constructParams = array(new Instance('$Y2A'), new Instance('$Y2B'));
-//        $this->dice->addRule('HasTwoSameDependencies', $rule);
-//
-//        $twodep = $this->dice->create('HasTwoSameDependencies');
-//
-//        $this->assertEquals('first', $twodep->y2a->name);
-//        $this->assertEquals('second', $twodep->y2b->name);
-//
-//    }
-//
-//
-//    public function testCall()
-//    {
-//        $rule = new Rule;
-//        $rule->call[] = array('callMe', array());
-//        $this->dice->addRule('TestCall', $rule);
-//        $object = $this->dice->create('TestCall');
-//        $this->assertTrue($object->isCalled);
-//    }
-//
-//    public function testCallWithParameters()
-//    {
-//        $rule = new Rule;
-//        $rule->call[] = array('callMe', array('one', 'two'));
-//        $this->dice->addRule('TestCall2', $rule);
-//        $object = $this->dice->create('TestCall2');
-//        $this->assertEquals('one', $object->foo);
-//        $this->assertEquals('two', $object->bar);
-//    }
-//
-//
-//    //
-//    public function testInterfaceRule()
-//    {
-//        $rule = new Rule;
-//
-//        $rule->shared = true;
-//        $this->dice->addRule('interfaceTest', $rule);
-//
-//        $one = $this->dice->create('InterfaceTestClass');
-//        $two = $this->dice->create('InterfaceTestClass');
-//
-//
-//        $this->assertSame($one, $two);
-//
-//
-//    }
-//
-//
-//    public function testBestMatch()
-//    {
-//        $bestMatch = $this->dice->create('BestMatch', array('foo', $this->dice->create('\Jasrags\A')));
-//        $this->assertEquals('foo', $bestMatch->string);
-//        $this->assertInstanceOf('A', $bestMatch->a);
-//    }
-//
-//
-//    public function testShareInstances()
-//    {
-//        $rule = new Rule();
-//        $rule->shareInstances = array(new Instance('Shared'));
-//        $this->dice->addRule('TestSharedInstancesTop', $rule);
-//
-//
-//        $shareTest = $this->dice->create('TestSharedInstancesTop');
-//
-//        $this->assertinstanceOf('TestSharedInstancesTop', $shareTest);
-//
-//        $this->assertInstanceOf('SharedInstanceTest1', $shareTest->share1);
-//        $this->assertInstanceOf('SharedInstanceTest2', $shareTest->share2);
-//
-//        $this->assertSame($shareTest->share1->shared, $shareTest->share2->shared);
-//        $this->assertEquals($shareTest->share1->shared->uniq, $shareTest->share2->shared->uniq);
-//
-//    }
-//
+
+    /**
+     * @test
+     */
+    public function testMultipleSubstitutions()
+    {
+        $rule = new Rule;
+        $rule->instanceOf = 'Jasrags\Y2';
+        $rule->constructParams[] = 'first';
+        $this->dice->addRule('$Y2A', $rule);
+
+        $rule = new Rule;
+        $rule->instanceOf = 'Jasrags\Y2';
+        $rule->constructParams[] = 'second';
+        $this->dice->addRule('$Y2B', $rule);
+
+        $rule = new Rule;
+        $rule->constructParams = array(new Instance('$Y2A'), new Instance('$Y2B'));
+        $this->dice->addRule('Jasrags\HasTwoSameDependencies', $rule);
+
+        $twodep = $this->dice->create('Jasrags\HasTwoSameDependencies');
+
+        $this->assertEquals('first', $twodep->y2a->name);
+        $this->assertEquals('second', $twodep->y2b->name);
+    }
+
+    /**
+     * @test
+     */
+    public function testCall()
+    {
+        $rule = new Rule;
+        $rule->call[] = array('callMe', array());
+        $this->dice->addRule('Jasrags\TestCall', $rule);
+        $object = $this->dice->create('Jasrags\TestCall');
+        $this->assertTrue($object->isCalled);
+    }
+
+    /**
+     * @test
+     */
+    public function testCallWithParameters()
+    {
+        $rule = new Rule;
+        $rule->call[] = array('callMe', array('one', 'two'));
+        $this->dice->addRule('Jasrags\TestCall2', $rule);
+        $object = $this->dice->create('Jasrags\TestCall2');
+        $this->assertEquals('one', $object->foo);
+        $this->assertEquals('two', $object->bar);
+    }
+
+    /**
+     * @test
+     */
+    public function testInterfaceRule()
+    {
+        $rule = new Rule;
+
+        $rule->shared = true;
+        $this->dice->addRule('Jasrags\interfaceTest', $rule);
+
+        $one = $this->dice->create('Jasrags\InterfaceTestClass');
+        $two = $this->dice->create('Jasrags\InterfaceTestClass');
+
+
+        $this->assertSame($one, $two);
+    }
+
+    /**
+     * @test
+     */
+    public function testBestMatch()
+    {
+        $bestMatch = $this->dice->create('Jasrags\BestMatch', array('foo', $this->dice->create('Jasrags\A')));
+        $this->assertEquals('foo', $bestMatch->string);
+        $this->assertInstanceOf('Jasrags\A', $bestMatch->a);
+    }
+
+    /**
+     * @test
+     */
+    public function testShareInstances()
+    {
+        $rule = new Rule();
+        $rule->shareInstances = array(new Instance('Jasrags\Shared'));
+        $this->dice->addRule('Jasrags\TestSharedInstancesTop', $rule);
+
+
+        $shareTest = $this->dice->create('Jasrags\TestSharedInstancesTop');
+
+        $this->assertinstanceOf('Jasrags\TestSharedInstancesTop', $shareTest);
+
+        $this->assertInstanceOf('Jasrags\SharedInstanceTest1', $shareTest->share1);
+        $this->assertInstanceOf('Jasrags\SharedInstanceTest2', $shareTest->share2);
+
+        $this->assertSame($shareTest->share1->shared, $shareTest->share2->shared);
+        $this->assertEquals($shareTest->share1->shared->uniq, $shareTest->share2->shared->uniq);
+    }
+
+    /**
+     * @test
+     */
 //    public function testShareInstancesMultiple()
 //    {
 //        $rule = new Rule();
 //        $rule->shareInstances = array(new Instance('Jasrags\Shared'));
-//        $this->dice->addRule('TestSharedInstancesTop', $rule);
+//        $this->dice->addRule('Jasrags\TestSharedInstancesTop', $rule);
 //
 //
 //        $shareTest = $this->dice->create('Jasrags\TestSharedInstancesTop');
 //
-//        $this->assertinstanceOf('TestSharedInstancesTop', $shareTest);
+//        $this->assertinstanceOf('Jasrags\TestSharedInstancesTop', $shareTest);
 //
-//        $this->assertInstanceOf('SharedInstanceTest1', $shareTest->share1);
-//        $this->assertInstanceOf('SharedInstanceTest2', $shareTest->share2);
+//        $this->assertInstanceOf('Jasrags\SharedInstanceTest1', $shareTest->share1);
+//        $this->assertInstanceOf('Jasrags\SharedInstanceTest2', $shareTest->share2);
 //
 //        $this->assertSame($shareTest->share1->shared, $shareTest->share2->shared);
 //        $this->assertEquals($shareTest->share1->shared->uniq, $shareTest->share2->shared->uniq);
 //
 //
-//        $shareTest2 = $this->dice->create('TestSharedInstancesTop');
+//        $shareTest2 = $this->dice->create('Jasrags\TestSharedInstancesTop');
 //        $this->assertSame($shareTest2->share1->shared, $shareTest2->share2->shared);
 //        $this->assertEquals($shareTest2->share1->shared->uniq, $shareTest2->share2->shared->uniq);
 //
 //        $this->assertNotSame($shareTest->share1->shared, $shareTest2->share2->shared);
 //        $this->assertNotEquals($shareTest->share1->shared->uniq, $shareTest2->share2->shared->uniq);
-//
 //    }
 }
 
@@ -540,30 +593,28 @@ class TestSharedInstancesTop
     public $share1;
     public $share2;
 
-    public function __construct(SharedInstanceTest1 $share1, SharedInstanceTest2 $share2)
+    public function __construct(\Jasrags\SharedInstanceTest1 $share1, \Jasrags\SharedInstanceTest2 $share2)
     {
         $this->share1 = $share1;
         $this->share2 = $share2;
     }
 }
 
-
 class SharedInstanceTest1
 {
     public $shared;
 
-    public function __construct(Shared $shared)
+    public function __construct(\Jasrags\Shared $shared)
     {
         $this->shared = $shared;
     }
 }
 
-
 class SharedInstanceTest2
 {
     public $shared;
 
-    public function __construct(Shared $shared)
+    public function __construct(\Jasrags\Shared $shared)
     {
         $this->shared = $shared;
     }
@@ -591,12 +642,11 @@ class TestCall2
     }
 }
 
-
 class TestCall3
 {
     public $a;
 
-    public function callMe(A $a)
+    public function callMe(\Jasrags\A $a)
     {
         $this->a = $a;
     }
@@ -607,7 +657,7 @@ class HasTwoSameDependencies
     public $y2a;
     public $y2b;
 
-    public function __construct(Y2 $y2a, Y2 $y2b)
+    public function __construct(\Jasrags\Y2 $y2a, \Jasrags\Y2 $y2b)
     {
         $this->y2a = $y2a;
         $this->y2b = $y2b;
@@ -618,12 +668,11 @@ class Y1
 {
     public $y2;
 
-    public function __construct(Y2 $y2)
+    public function __construct(\Jasrags\Y2 $y2)
     {
         $this->y2 = $y2;
     }
 }
-
 
 class Y2
 {
@@ -635,9 +684,8 @@ class Y2
     }
 }
 
-class Y3 extends Y2
+class Y3 extends \Jasrags\Y2
 {
-
 }
 
 class Z
@@ -645,7 +693,7 @@ class Z
     public $y1;
     public $y2;
 
-    public function __construct(Y $y1, Y $y2)
+    public function __construct(\Jasrags\Y $y1, \Jasrags\Y $y2)
     {
         $this->y1 = $y1;
         $this->y2 = $y2;
@@ -668,7 +716,7 @@ class BestMatch
     public $string;
     public $b;
 
-    public function __construct($string, A $a, B $b)
+    public function __construct($string, \Jasrags\A $a, \Jasrags\B $b)
     {
         $this->a = $a;
         $this->string = $string;
@@ -676,8 +724,11 @@ class BestMatch
     }
 }
 
-//Because the DIC's job is to create other classes, some dummy class definitions are required.
-//Mocks cannot be used because the DIC relies on class definitions
+/**
+ * Because the DIC's job is to create other classes, some dummy class
+ * definitions are required. Mocks cannot be used because the DIC relies
+ * on class definitions.
+ */
 
 class MyObj
 {
@@ -694,14 +745,13 @@ class MyObj
     }
 }
 
-
 class A2
 {
     public $b;
     public $c;
     public $foo;
 
-    public function __construct(B $b, C $c, $foo)
+    public function __construct(\Jasrags\B $b, \Jasrags\C $c, $foo)
     {
         $this->b = $b;
         $this->foo = $foo;
@@ -709,14 +759,13 @@ class A2
     }
 }
 
-
 class A3
 {
     public $b;
     public $c;
     public $foo;
 
-    public function __construct(C $c, $foo, B $b)
+    public function __construct(\Jasrags\C $c, $foo, \Jasrags\B $b)
     {
         $this->b = $b;
         $this->foo = $foo;
@@ -728,7 +777,7 @@ class A
 {
     public $b;
 
-    public function __construct(B $b)
+    public function __construct(\Jasrags\B $b)
     {
         $this->b = $b;
     }
@@ -738,13 +787,13 @@ class B
 {
     public $c;
 
-    public function __construct(C $c)
+    public function __construct(\Jasrags\C $c)
     {
         $this->c = $c;
     }
 }
 
-class ExtendedB extends B
+class ExtendedB extends \Jasrags\B
 {
 
 }
@@ -754,13 +803,12 @@ class C
     public $d;
     public $e;
 
-    public function __construct(D $d, E $e)
+    public function __construct(\Jasrags\D $d, \Jasrags\E $e)
     {
         $this->d = $d;
         $this->e = $e;
     }
 }
-
 
 class D
 {
@@ -771,7 +819,7 @@ class E
 {
     public $f;
 
-    public function __construct(F $f)
+    public function __construct(\Jasrags\F $f)
     {
         $this->f = $f;
     }
@@ -799,7 +847,7 @@ class RequiresConstructorArgsB
     public $foo;
     public $bar;
 
-    public function __construct(A $a, $foo, $bar)
+    public function __construct(\Jasrags\A $a, $foo, $bar)
     {
         $this->a = $a;
         $this->foo = $foo;
@@ -811,7 +859,6 @@ interface interfaceTest
 {
 }
 
-class InterfaceTestClass implements interfaceTest
+class InterfaceTestClass implements \Jasrags\interfaceTest
 {
-
 }
