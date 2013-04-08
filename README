@@ -3,6 +3,11 @@ Dice
 
 Dice is a minimalist Dependency Injection Container for PHP.
 
+FORK
+====
+This is a fork I created to port the code to be a composer package and PSR-0
+compliant. Also I plan on adding full tests all classes
+
 
 Installation
 ------------
