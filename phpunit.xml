@@ -1,0 +1,20 @@
+<phpunit colors="true" convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true" stopOnError="true"
+         stopOnFailure="false" stopOnIncomplete="false" stopOnSkipped="false"
+         bootstrap="phpunit-bootstrap.php" strict="true">
+    <testsuites>
+        <testsuite name="Dice">
+            <directory suffix="Test.php">tests/unit</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory>.</directory>
+            <exclude>
+                <directory>tests</directory>
+                <directory>vendor</directory>
+                <file>phpunit-bootstrap.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

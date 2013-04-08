@@ -1,0 +1,26 @@
+{
+    "name": "jasrags/dice",
+    "description": "Dice is a minimalist Dependency Injection Container for PHP.",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Jason Rasgdale",
+            "email": "jrags@jasrags.net"
+        },
+        {
+            "name": "Tom Butler",
+            "email": "tom@r.je"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.19"
+    },
+    "autoload": {
+        "psr-0": {
+            "Jasrags": "src/"
+        }
+    }
+}
