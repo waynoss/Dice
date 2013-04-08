@@ -7,13 +7,24 @@ namespace Jasrags\Dice\XML;
  */
 class Callback
 {
+    /**
+     * @var string
+     */
     private $str;
 
+    /**
+     * @param string $str
+     */
     public function __construct($str)
     {
         $this->str = $str;
     }
 
+    /**
+     * @param Dice $dic
+     *
+     * @return mixed
+     */
     public function create(Dice $dic)
     {
         $parts = explode('::', trim($this->str, '{}'));
@@ -22,7 +33,9 @@ class Callback
             if (strpos($var, '(') !== false) {
                 $args = explode(',', substr($var, strpos($var, '(') + 1, strpos($var, ')') - strpos($var, '(') - 1));
                 $object = call_user_func_array(array($object, substr($var, 0, strpos($var, '('))), ($args[0] == null) ? array() : $args);
-            } else $object = $object->$var;
+            } else {
+                $object = $object->$var;
+            }
         }
 
         return $object;
