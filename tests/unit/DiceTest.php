@@ -557,7 +557,6 @@ class DiceTest extends \PHPUnit_Framework_TestCase
         $rule->shareInstances = array(new Instance('Jasrags\Shared'));
         $this->dice->addRule('Jasrags\TestSharedInstancesTop', $rule);
 
-
         $shareTest = $this->dice->create('Jasrags\TestSharedInstancesTop');
 
         $this->assertinstanceOf('Jasrags\TestSharedInstancesTop', $shareTest);
@@ -567,7 +566,6 @@ class DiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($shareTest->share1->shared, $shareTest->share2->shared);
         $this->assertEquals($shareTest->share1->shared->uniq, $shareTest->share2->shared->uniq);
-
 
         $shareTest2 = $this->dice->create('Jasrags\TestSharedInstancesTop');
         $this->assertSame($shareTest2->share1->shared, $shareTest2->share2->shared);
