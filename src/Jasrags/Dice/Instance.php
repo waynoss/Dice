@@ -10,7 +10,7 @@ class Instance
     /**
      * @var string
      */
-    protected $name;
+    public $name;
 
     /**
      * @param string $name
