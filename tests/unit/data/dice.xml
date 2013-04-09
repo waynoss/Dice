@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dice>
+    <rule>
+        <name>Foo</name>
+        <!-- Shared: either true or false. If the tag is omitted it defaults to false -->
+        <shared>true</shared>
+
+        <!-- Multiple substitutions can be defined using the substitute tag: -->
+        <substitute>
+            <use>BIterator</use>
+            <as>Iterator</as>
+        </substitute>
+        <substitute>
+            <use>X</use>
+            <as>Y</as>
+        </substitute>
+
+        <!-- Supports calling parameters after construction using the call tag: -->
+        <call>
+            <method>setAttribute</method>
+            <params>
+                <param>Foo</param>
+                <param>Bar</param>
+            </params>
+        </call>
+
+        <call>
+            <method>setAttribute</method>
+            <params>
+                <param>Bar</param>
+                <param>Baz</param>
+            </params>
+        </call>
+
+        <!-- Multiple call tags can be defined. Instances of a specified class name are
+        supported by using the <instance> tag. This will supply an instance of "X"
+        equivilant to $dice->create('X'); (using rules for X) to the setDependency method.
+        Instance supports named instances as well as class names.
+        -->
+        <call>
+            <method>setDependency</method>
+            <params>
+                <instance>X</instance>
+            </params>
+        </call>
+
+        <!-- For named instances, supports the instanceof tag.
+             See documentation on Named Instances
+        -->
+        <instanceof>Bar</instanceof>
+
+
+        <!-- Comma separated list of dependencies which will be created new, ignoring their shared rules -->
+        <newinstances>Foo,Bar</newinstances>
+
+        <!-- List of constructor parameters -->
+        <construct>
+            <param>123</param>
+            <param>XYZ</param>
+        </construct>
+    </rule>
+
+    <rule>
+        <name>Bar</name>
+        <!-- Define rules for the next component -->
+    </rule>
+</dice>

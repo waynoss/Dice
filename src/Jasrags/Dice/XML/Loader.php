@@ -27,16 +27,16 @@ class Loader
 
     /**
      * @param $map
-     * @param Dice $dic
+     * @param Dice $dice
      */
-    public function loadXml($map, Dice $dic)
+    public function loadXml($map, Dice $dice)
     {
         if (!($map instanceof \SimpleXmlElement)) {
             $map = simplexml_load_file($map);
         }
         $rules = array();
         foreach ($map as $key => $value) {
-            $rule = clone $dic->getRule((string)$value->name);
+            $rule = clone $dice->getRule((string)$value->name);
             $rule->shared = ($value->shared == 'true');
             $rule->inherit = ($value->inherit == 'true');
             if ($value->call) {
@@ -71,7 +71,7 @@ class Loader
                     $rule->shareInstances[] = $this->getComponent((string)$share, true);
                 }
             }
-            $dic->addRule((string)$value->name, $rule);
+            $dice->addRule((string)$value->name, $rule);
         }
     }
 }
