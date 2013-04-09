@@ -551,31 +551,31 @@ class DiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-//    public function testShareInstancesMultiple()
-//    {
-//        $rule = new Rule();
-//        $rule->shareInstances = array(new Instance('Jasrags\Shared'));
-//        $this->dice->addRule('Jasrags\TestSharedInstancesTop', $rule);
-//
-//
-//        $shareTest = $this->dice->create('Jasrags\TestSharedInstancesTop');
-//
-//        $this->assertinstanceOf('Jasrags\TestSharedInstancesTop', $shareTest);
-//
-//        $this->assertInstanceOf('Jasrags\SharedInstanceTest1', $shareTest->share1);
-//        $this->assertInstanceOf('Jasrags\SharedInstanceTest2', $shareTest->share2);
-//
-//        $this->assertSame($shareTest->share1->shared, $shareTest->share2->shared);
-//        $this->assertEquals($shareTest->share1->shared->uniq, $shareTest->share2->shared->uniq);
-//
-//
-//        $shareTest2 = $this->dice->create('Jasrags\TestSharedInstancesTop');
-//        $this->assertSame($shareTest2->share1->shared, $shareTest2->share2->shared);
-//        $this->assertEquals($shareTest2->share1->shared->uniq, $shareTest2->share2->shared->uniq);
-//
-//        $this->assertNotSame($shareTest->share1->shared, $shareTest2->share2->shared);
-//        $this->assertNotEquals($shareTest->share1->shared->uniq, $shareTest2->share2->shared->uniq);
-//    }
+    public function testShareInstancesMultiple()
+    {
+        $rule = new Rule();
+        $rule->shareInstances = array(new Instance('Jasrags\Shared'));
+        $this->dice->addRule('Jasrags\TestSharedInstancesTop', $rule);
+
+
+        $shareTest = $this->dice->create('Jasrags\TestSharedInstancesTop');
+
+        $this->assertinstanceOf('Jasrags\TestSharedInstancesTop', $shareTest);
+
+        $this->assertInstanceOf('Jasrags\SharedInstanceTest1', $shareTest->share1);
+        $this->assertInstanceOf('Jasrags\SharedInstanceTest2', $shareTest->share2);
+
+        $this->assertSame($shareTest->share1->shared, $shareTest->share2->shared);
+        $this->assertEquals($shareTest->share1->shared->uniq, $shareTest->share2->shared->uniq);
+
+
+        $shareTest2 = $this->dice->create('Jasrags\TestSharedInstancesTop');
+        $this->assertSame($shareTest2->share1->shared, $shareTest2->share2->shared);
+        $this->assertEquals($shareTest2->share1->shared->uniq, $shareTest2->share2->shared->uniq);
+
+        $this->assertNotSame($shareTest->share1->shared, $shareTest2->share2->shared);
+        $this->assertNotEquals($shareTest->share1->shared->uniq, $shareTest2->share2->shared->uniq);
+    }
 }
 
 class Shared
