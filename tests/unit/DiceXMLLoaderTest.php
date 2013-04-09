@@ -36,7 +36,7 @@ class DiceXMLLoaderTest extends \PHPUnit_Framework_TestCase
         $dice = new Dice();
         $this->object->loadXml(__DIR__ . '/data/dice.xml', $dice);
         $result = $dice->getRule('Foo');
-//print_r($result->shareInstances);
+
         $this->assertTrue($result->shared);
         $this->assertEquals('123', $result->constructParams[0]);
         $this->assertEquals('XYZ', $result->constructParams[1]);
