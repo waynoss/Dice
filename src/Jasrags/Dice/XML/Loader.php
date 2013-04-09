@@ -1,6 +1,9 @@
 <?php
 namespace Jasrags\Dice\XML;
 
+use Jasrags\Dice;
+use Jasrags\Dice\Instance;
+
 /**
  * Class Loader
  * @package Jasrags\Dice\XML
@@ -28,7 +31,7 @@ class Loader
      */
     public function loadXml($map, Dice $dic)
     {
-        if (!($map instanceof SimpleXmlElement)) {
+        if (!($map instanceof \SimpleXmlElement)) {
             $map = simplexml_load_file($map);
         }
         $rules = array();
