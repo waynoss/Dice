@@ -23,7 +23,6 @@
                 <param>Bar</param>
             </params>
         </call>
-
         <call>
             <method>setAttribute</method>
             <params>
@@ -49,9 +48,12 @@
         -->
         <instanceof>Bar</instanceof>
 
-
         <!-- Comma separated list of dependencies which will be created new, ignoring their shared rules -->
         <newinstances>Foo,Bar</newinstances>
+
+        <!-- Dependencies which will be shared -->
+        <shareinstances>Baz</shareinstances>
+        <shareinstances>Boo</shareinstances>
 
         <!-- List of constructor parameters -->
         <construct>

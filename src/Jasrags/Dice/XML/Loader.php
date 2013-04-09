@@ -34,7 +34,6 @@ class Loader
         if (!($map instanceof \SimpleXmlElement)) {
             $map = simplexml_load_file($map);
         }
-        $rules = array();
         foreach ($map as $key => $value) {
             $rule = clone $dice->getRule((string)$value->name);
             $rule->shared = ($value->shared == 'true');
@@ -57,8 +56,8 @@ class Loader
                 $rule->newInstances = explode(',', $value->newinstances);
             }
             if ($value->substitute) {
-                foreach ($value->use as $use) {
-                    $rule->substitutions[(string)$use->as] = $this->getComponent((string)$use->use, true);
+                foreach ($value->substitute as $name => $substitute) {
+                    $rule->substitutions[(string)$substitute->as] = $this->getComponent((string)$substitute->use, true);
                 }
             }
             if ($value->construct) {
