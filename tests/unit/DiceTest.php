@@ -53,6 +53,19 @@ class DiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function testSetFluentRule()
+    {
+        $defaultBehaviour = new Rule();
+        $defaultBehaviour->setShared(true)
+            ->setNewInstances(array('Foo', 'Bar'));
+
+        $this->dice->addRule('*', $defaultBehaviour);
+        $this->assertSame($defaultBehaviour, $this->dice->getRule('*'));
+    }
+
+    /**
+     * @test
+     */
     public function testDefaultRuleWorks()
     {
         $defaultBehaviour = new Rule();
