@@ -1,6 +1,8 @@
 <?php
 namespace Jasrags\Dice\XML;
 
+use Jasrags\Dice;
+
 /**
  * Class Callback
  * @package Jasrags\Dice\XML
