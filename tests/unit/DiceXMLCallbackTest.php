@@ -17,7 +17,6 @@ class DiceXMLCallbackTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->object = new Callback('string');
     }
 
     /**
@@ -34,5 +33,14 @@ class DiceXMLCallbackTest extends \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $this->markTestIncomplete('create test for create method');
+    }
+}
+
+class ACallback
+{
+    public $test;
+
+    public function callback($arg1, $arg2)
+    {
     }
 }

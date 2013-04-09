@@ -23,14 +23,14 @@ class Callback
     }
 
     /**
-     * @param Dice $dic
+     * @param Dice $dice
      *
      * @return mixed
      */
-    public function create(Dice $dic)
+    public function create(Dice $dice)
     {
         $parts = explode('::', trim($this->str, '{}'));
-        $object = $dic->create(array_shift($parts));
+        $object = $dice->create(array_shift($parts));
         while ($var = array_shift($parts)) {
             if (strpos($var, '(') !== false) {
                 $args = explode(',', substr($var, strpos($var, '(') + 1, strpos($var, ')') - strpos($var, '(') - 1));
