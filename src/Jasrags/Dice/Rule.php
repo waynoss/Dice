@@ -218,7 +218,7 @@ class Rule
      */
     public function addCall($method, array $args)
     {
-        $this->substitutions[] = array($method, $args);
+        $this->call[] = array($method, $args);
 
         return $this;
     }
