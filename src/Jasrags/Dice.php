@@ -74,7 +74,7 @@ class Dice
     public function create($component, array $args = array(), $callback = null, $forceNewInstance = false)
     {
         if ($component instanceof Instance) {
-            $component = $component->getName();
+            $component = $component->name;
         }
 
         if (!isset($this->rules[strtolower($component)]) && !class_exists($component)) {
@@ -118,7 +118,7 @@ class Dice
     {
         for ($i = 0; $i < count($params); $i++) {
             if ($params[$i] instanceof Instance) {
-                $params[$i] = $this->create($params[$i]->getName(), array(), null, in_array(strtolower($params[$i]->getName()), array_map('strtolower', $newInstances)));
+                $params[$i] = $this->create($params[$i]->name, array(), null, in_array(strtolower($params[$i]->name), array_map('strtolower', $newInstances)));
             } else {
                 $params[$i] = (!(is_array($params[$i]) && isset($params[$i][0]) && is_string($params[$i][0])) && is_callable($params[$i])) ? call_user_func($params[$i], $this) : $params[$i];
             }
