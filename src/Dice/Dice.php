@@ -1,17 +1,18 @@
 <?php
-namespace Jasrags;
+namespace ATNWebServiceClient\SolaCore\DependencyInjection;
 
-use Jasrags\Dice\Rule;
-use Jasrags\Dice\Instance;
+use ATNWebServiceClient\SolaCore;
+use ATNWebServiceClient\SolaCore\DependencyInjection\Dice\Rule;
+use ATNWebServiceClient\SolaCore\DependencyInjection\Dice\Instance;
 
 /**
  * Class Dice
- * @description    Dice - A minimal Dependency Injection Container for PHP
- * @author            Tom Butler tom@r.je
- * @copyright        2012-2013 Tom Butler <tom@r.je>
+ * @description     Dice - A minimal Dependency Injection Container for PHP
+ * @author          Tom Butler tom@r.je
+ * @copyright       2012-2013 Tom Butler <tom@r.je>
  * @link            http://r.je/dice.html
- * @license        http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version            1.0
+ * @license         http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version         1.0
  */
 class Dice
 {
@@ -63,6 +64,31 @@ class Dice
     }
 
     /**
+     * wdh
+     *
+     * @param string $component
+     * @param array $rules
+     * @param array $args
+     * @param null $callback
+     * @param bool $forceNewInstance
+     *
+     * @return object
+     * @throws \Exception
+     */
+    public function setInstance($component, array $rules = array(), array $args = array(), $callback = null, $forceNewInstance = false)
+    {
+        $rule = new Rule;
+
+        foreach( $rules as $key=>$value) {
+            $rule->$key = $value;
+        }
+
+        $this->addRule($component, $rule);
+
+        $this->create($component, $args, $callback, $forceNewInstance);
+
+    }
+    /**
      * @param string $component
      * @param array $args
      * @param null $callback
@@ -74,7 +100,7 @@ class Dice
     public function create($component, array $args = array(), $callback = null, $forceNewInstance = false)
     {
         if ($component instanceof Instance) {
-            $component = $component->name;
+            $component = $component->getName();
         }
 
         if (!isset($this->rules[strtolower($component)]) && !class_exists($component)) {
@@ -118,7 +144,7 @@ class Dice
     {
         for ($i = 0; $i < count($params); $i++) {
             if ($params[$i] instanceof Instance) {
-                $params[$i] = $this->create($params[$i]->name, array(), null, in_array(strtolower($params[$i]->name), array_map('strtolower', $newInstances)));
+                $params[$i] = $this->create($params[$i]->getName(), array(), null, in_array(strtolower($params[$i]->getName()), array_map('strtolower', $newInstances)));
             } else {
                 $params[$i] = (!(is_array($params[$i]) && isset($params[$i][0]) && is_string($params[$i][0])) && is_callable($params[$i])) ? call_user_func($params[$i], $this) : $params[$i];
             }

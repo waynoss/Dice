@@ -1,11 +1,11 @@
 <?php
-namespace Jasrags\Dice\XML;
+namespace ATNWebServiceClient\SolaCore\DependencyInjection\Dice\XML;
 
-use Jasrags\Dice;
+use ATNWebServiceClient\SolaCore\DependencyInjection\Dice;
 
 /**
  * Class Callback
- * @package Jasrags\Dice\XML
+ * @package DependencyInjection\Dice\XML
  */
 class Callback
 {
@@ -23,14 +23,14 @@ class Callback
     }
 
     /**
-     * @param Dice $dice
+     * @param Dice $dic
      *
      * @return mixed
      */
-    public function create(Dice $dice)
+    public function create(Dice $dic)
     {
         $parts = explode('::', trim($this->str, '{}'));
-        $object = $dice->create(array_shift($parts));
+        $object = $dic->create(array_shift($parts));
         while ($var = array_shift($parts)) {
             if (strpos($var, '(') !== false) {
                 $args = explode(',', substr($var, strpos($var, '(') + 1, strpos($var, ')') - strpos($var, '(') - 1));

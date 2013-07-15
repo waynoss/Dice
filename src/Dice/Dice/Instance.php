@@ -1,9 +1,9 @@
 <?php
-namespace Jasrags\Dice;
+namespace ATNWebServiceClient\SolaCore\DependencyInjection\Dice;
 
 /**
  * Class Instance
- * @package Jasrags\Dice
+ * @package DependencyInjection\Dice
  */
 class Instance
 {

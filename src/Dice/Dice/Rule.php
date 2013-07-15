@@ -1,9 +1,9 @@
 <?php
-namespace Jasrags\Dice;
+namespace ATNWebServiceClient\SolaCore\DependencyInjection\Dice;
 
 /**
  * Class Rule
- * @package Jasrags\Dice
+ * @package DependencyInjection\Dice
  */
 class Rule
 {
@@ -218,7 +218,7 @@ class Rule
      */
     public function addCall($method, array $args)
     {
-        $this->call[] = array($method, $args);
+        $this->substitutions[] = array($method, $args);
 
         return $this;
     }
