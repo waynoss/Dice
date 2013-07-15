@@ -3,7 +3,7 @@ Dice
 
 Dice is a minimalist Dependency Injection Container for PHP.
 
-removed long winder parameters
+removed long-winded parameters
 created a static dices class
 
 replace this..
